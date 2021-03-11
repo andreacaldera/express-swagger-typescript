@@ -13,7 +13,7 @@ app.use('/api', createEntityRouter())
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: Error, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   return res.status(500).json({
     errorName: err.name,
     message: err.message,

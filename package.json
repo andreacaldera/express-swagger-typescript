@@ -7,9 +7,6 @@
     "build": "tsc",
     "start": "cd build && node src",
     "generate-swagger": "ts-node --files --project tsconfig.json src/generate-swagger",
-    "typeconv": "typeconv -f ts -t oapi -o oapi --oapi-format json 'src/app/entity.ts'",
-    "help": "typeconv --help",
-    "hit-endpoints": "ts-node --files --project tsconfig.json test/hit-endpoints.ts",
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,7 +22,9 @@
   },
   "keywords": [
     "express",
-    "typescript"
+    "typescript",
+    "swagger",
+    "generator"
   ],
   "devDependencies": {
     "@types/express": "^4.17.11",

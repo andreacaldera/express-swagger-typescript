@@ -1,4 +1,4 @@
-import fs from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import { getOpenApiWriter, getTypeScriptReader, makeConverter } from 'typeconv'
 import swagger from './swagger.json'
 
@@ -10,7 +10,7 @@ const writer = getOpenApiWriter({
 })
 
 const { convert } = makeConverter(reader, writer)
-const readFile = (filename: string): string => fs.readFileSync(filename).toString()
+const readFile = (filename: string): string => readFileSync(filename).toString()
 
 export const generateRequestBodyDefinition = async (
   tsData: string,
@@ -20,10 +20,10 @@ export const generateRequestBodyDefinition = async (
   return JSON.parse(data).components.schemas[entityName]
 }
 
-const updateEndpoint = (path: string, endpoint: unknown) => {
+const updateEndpoint = (endpoint: unknown) => {
   const newSwagger = { ...swagger }
   Object.assign(newSwagger.paths, endpoint)
-  fs.writeFileSync('./src/swagger.json', JSON.stringify(newSwagger, null, 2))
+  writeFileSync('./src/swagger.json', JSON.stringify(newSwagger, null, 2))
 }
 
 type Parameter = {
@@ -100,7 +100,7 @@ generateRequestBodyDefinition(readFile('./src/app/entity.ts'), 'Entity')
       ],
     })
 
-    updateEndpoint('/api/entity', postEntityEndpoint)
-    updateEndpoint('/api/entity/{id}', getEntityEndpoint)
+    updateEndpoint(postEntityEndpoint)
+    updateEndpoint(getEntityEndpoint)
   })
   .catch((error) => console.error('Unable to generate swagger', error))
