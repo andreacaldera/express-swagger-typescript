@@ -1,0 +1,9 @@
+# The file entity.graphql was auto-generated from src/app/entity.ts using
+# core-types-graphql (https://github.com/grantila/core-types-graphql)
+# on behalf of
+# typeconv (https://github.com/grantila/typeconv)
+
+type Entity {
+  id: Float!
+  name: String!
+}
