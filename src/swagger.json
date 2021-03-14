@@ -6,31 +6,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/internal/api/individual/referenceNumber/{referenceNumber}": {
-      "get": {
-        "summary": "Returns an individual",
-        "description": "Returns individual profile based on reference number",
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "Individual response"
-          }
-        }
-      },
-      "parameters": [
-        {
-          "name": "referenceNumber",
-          "in": "path",
-          "description": "Individual reference number",
-          "required": true,
-          "schema": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      ]
-    },
-    "/api/entity": {
+    "/api/person": {
       "post": {
         "summary": "summary todo",
         "description": "description todo",
@@ -53,7 +29,7 @@
         }
       }
     },
-    "/api/entity/{id}": {
+    "/api/person/{id}": {
       "get": {
         "summary": "summary todo",
         "description": "description todo",

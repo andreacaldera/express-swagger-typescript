@@ -2,6 +2,8 @@ import { readFileSync, writeFileSync } from 'fs'
 import { getOpenApiWriter, getTypeScriptReader, makeConverter } from 'typeconv'
 import swagger from './swagger.json'
 
+type Swagger = any // todo use correct type
+
 const reader = getTypeScriptReader()
 const writer = getOpenApiWriter({
   format: 'json',
@@ -12,18 +14,21 @@ const writer = getOpenApiWriter({
 const { convert } = makeConverter(reader, writer)
 const readFile = (filename: string): string => readFileSync(filename).toString()
 
-export const generateRequestBodyDefinition = async (
-  tsData: string,
-  entityName: string,
-): Promise<string> => {
+export const generateRequestBodyDefinition = async (tsData: string): Promise<object> => {
   const { data } = await convert({ data: tsData })
-  return JSON.parse(data).components.schemas[entityName]
+  return JSON.parse(data)
 }
 
-const updateEndpoint = (endpoint: unknown) => {
+const updateEndpoint = (swagger: Swagger, endpoint: unknown): Swagger => {
   const newSwagger = { ...swagger }
   Object.assign(newSwagger.paths, endpoint)
-  writeFileSync('./src/swagger.json', JSON.stringify(newSwagger, null, 2))
+  return newSwagger
+}
+
+const updateComponents = (swagger: Swagger, components: unknown): Swagger => {
+  const newSwagger = { ...swagger }
+  Object.assign(newSwagger, { components })
+  return newSwagger
 }
 
 type Parameter = {
@@ -78,29 +83,34 @@ const generateEndpointDefinition = ({
   }
 }
 
-generateRequestBodyDefinition(readFile('./src/app/person.ts'), 'Person')
+generateRequestBodyDefinition(readFile('./src/app/person.ts'))
   .then((openApiData) => {
     const postEntityEndpoint = generateEndpointDefinition({
       type: 'post',
       path: '/api/entity',
-      schema: openApiData,
+      schema: {
+        $ref: '#/components/schema/Person',
+      },
     })
-    const getEntityEndpoint = generateEndpointDefinition({
-      type: 'get',
-      path: '/api/entity/{id}',
-      parameters: [
-        {
-          name: 'id',
-          in: 'path',
-          required: true,
-          schema: {
-            type: 'string',
-          },
-        },
-      ],
-    })
+    // const getEntityEndpoint = generateEndpointDefinition({
+    //   type: 'get',
+    //   path: '/api/entity/{id}',
+    //   parameters: [
+    //     {
+    //       name: 'id',
+    //       in: 'path',
+    //       required: true,
+    //       schema: {
+    //         type: 'string',
+    //       },
+    //     },
+    //   ],
+    // })
 
-    updateEndpoint(postEntityEndpoint)
-    updateEndpoint(getEntityEndpoint)
+    const withPost = updateEndpoint(swagger, postEntityEndpoint)
+    // const withGet = updateEndpoint(withPost, getEntityEndpoint)
+    const withComponents = updateComponents(withPost, openApiData)
+
+    writeFileSync('./src/swagger.json', JSON.stringify(withComponents, null, 2))
   })
   .catch((error) => console.error('Unable to generate swagger', error))
