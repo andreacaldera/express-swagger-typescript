@@ -1,17 +1,17 @@
 import { Router } from 'express'
-import { Entity } from './entity'
+import { Person } from './person'
 
 export const createEntityRouter = () => {
   const router = Router()
 
-  router.get('/entity/:id', async (req, res) => {
-    res.send(`You requested ${req.params.id}`)
+  router.get('/person/:id', async (req, res) => {
+    res.send(`You requested person ${req.params.id}`)
   })
 
-  router.post('/entity', async (req, res) => {
-    const entity: Entity = req.body
+  router.post('/person', async (req, res) => {
+    const entity: Person = req.body
     res.status(200).send({
-      data: `You posted ${JSON.stringify(entity)}`,
+      data: `You posted person ${JSON.stringify(entity)}`,
     })
   })
 
