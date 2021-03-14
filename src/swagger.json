@@ -6,6 +6,28 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/person/{id}": {
+      "get": {
+        "summary": "summary todo",
+        "description": "description todo",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "response description todo"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
     "/api/person": {
       "post": {
         "summary": "summary todo",
@@ -28,28 +50,6 @@
           }
         }
       }
-    },
-    "/api/person/{id}": {
-      "get": {
-        "summary": "summary todo",
-        "description": "description todo",
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "response description todo"
-          }
-        }
-      },
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ]
     }
   },
   "components": {
