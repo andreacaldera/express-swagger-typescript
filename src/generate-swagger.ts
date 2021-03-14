@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs'
+import { pathOr } from 'ramda'
 import { getOpenApiWriter, getTypeScriptReader, makeConverter } from 'typeconv'
 import swagger from './swagger.json'
 
@@ -25,8 +26,13 @@ const updateEndpoint = (swagger: Swagger, endpoint: unknown): Swagger => {
   return newSwagger
 }
 
-const updateComponents = (swagger: Swagger, components: unknown): Swagger => {
+const updateComponents = async (swagger: Swagger, typescriptFile: string): Promise<Swagger> => {
+  const schema = await generateRequestBodyDefinition(readFile(typescriptFile))
   const newSwagger = { ...swagger }
+  const existingSchema = swagger.components?.schema
+  const components = {
+    schema: { ...existingSchema, ...pathOr({}, ['components', 'schemas'], schema) },
+  }
   Object.assign(newSwagger, { components })
   return newSwagger
 }
@@ -83,33 +89,33 @@ const generateEndpointDefinition = ({
   }
 }
 
-generateRequestBodyDefinition(readFile('./src/app/person.ts'))
-  .then((openApiData) => {
+Promise.resolve()
+  .then(async () => {
     const postEntityEndpoint = generateEndpointDefinition({
       type: 'post',
-      path: '/api/entity',
+      path: '/api/person',
       schema: {
         $ref: '#/components/schema/Person',
       },
     })
-    // const getEntityEndpoint = generateEndpointDefinition({
-    //   type: 'get',
-    //   path: '/api/entity/{id}',
-    //   parameters: [
-    //     {
-    //       name: 'id',
-    //       in: 'path',
-    //       required: true,
-    //       schema: {
-    //         type: 'string',
-    //       },
-    //     },
-    //   ],
-    // })
+    const getEntityEndpoint = generateEndpointDefinition({
+      type: 'get',
+      path: '/api/person/{id}',
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+        },
+      ],
+    })
 
     const withPost = updateEndpoint(swagger, postEntityEndpoint)
-    // const withGet = updateEndpoint(withPost, getEntityEndpoint)
-    const withComponents = updateComponents(withPost, openApiData)
+    const withGet = updateEndpoint(withPost, getEntityEndpoint)
+    const withComponents = await updateComponents(withGet, './src/app/person.ts')
 
     writeFileSync('./src/swagger.json', JSON.stringify(withComponents, null, 2))
   })

@@ -6,33 +6,13 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/person/{id}": {
-      "get": {
-        "summary": "summary todo",
-        "description": "description todo",
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "response description todo"
-          }
-        }
-      },
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ]
-    },
     "/api/person": {
       "post": {
         "summary": "summary todo",
         "description": "description todo",
-        "produces": ["application/json"],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "response description todo"
@@ -50,6 +30,30 @@
           }
         }
       }
+    },
+    "/api/person/{id}": {
+      "get": {
+        "summary": "summary todo",
+        "description": "description todo",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "response description todo"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
     }
   },
   "components": {
@@ -66,7 +70,11 @@
             "type": "string"
           }
         },
-        "required": ["city", "postCode", "countryIsoCode"],
+        "required": [
+          "city",
+          "postCode",
+          "countryIsoCode"
+        ],
         "additionalProperties": false,
         "type": "object"
       },
@@ -88,7 +96,12 @@
             "type": "array"
           }
         },
-        "required": ["id", "firstName", "lastName1", "address"],
+        "required": [
+          "id",
+          "firstName",
+          "lastName1",
+          "address"
+        ],
         "additionalProperties": false,
         "type": "object"
       }
