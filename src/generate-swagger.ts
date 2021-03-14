@@ -78,7 +78,7 @@ const generateEndpointDefinition = ({
   }
 }
 
-generateRequestBodyDefinition(readFile('./src/app/entity.ts'), 'Entity')
+generateRequestBodyDefinition(readFile('./src/app/person.ts'), 'Person')
   .then((openApiData) => {
     const postEntityEndpoint = generateEndpointDefinition({
       type: 'post',

@@ -10,7 +10,6 @@
       "get": {
         "summary": "Returns an individual",
         "description": "Returns individual profile based on reference number",
-        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "Individual response"
@@ -30,34 +29,10 @@
         }
       ]
     },
-    "/api/entity": {
-      "post": {
-        "summary": "summary todo",
-        "description": "description todo",
-        "produces": ["application/json"],
-        "responses": {
-          "200": {
-            "description": "response description todo"
-          }
-        },
-        "requestBody": {
-          "description": "request body todo",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schema/Person"
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/entity/{id}": {
       "get": {
         "summary": "summary todo",
         "description": "description todo",
-        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "response description todo"
@@ -74,10 +49,32 @@
           }
         }
       ]
+    },
+    "/api/person": {
+      "post": {
+        "summary": "summary todo",
+        "description": "description todo",
+        "responses": {
+          "200": {
+            "description": "response description todo"
+          }
+        },
+        "requestBody": {
+          "description": "request body todo",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components.schemas.Person"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
-    "schema": {
+    "schemas": {
       "Address": {
         "properties": {
           "city": {
@@ -107,7 +104,7 @@
           },
           "address": {
             "items": {
-              "$ref": "#/components/schema/Address"
+              "$ref": "#/components/schemas/Address"
             },
             "type": "array"
           }
