@@ -24,7 +24,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schema/Person"
+                "$ref": "http://localhost:9090/swagger-schemas/person.json#/components/schema/Person"
               }
             }
           }

@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs'
-import { pathOr } from 'ramda'
+import { path } from 'ramda'
 import { getOpenApiWriter, getTypeScriptReader, makeConverter } from 'typeconv'
 import swagger from './swagger.json'
 
@@ -26,14 +26,18 @@ const updateEndpoint = (swagger: Swagger, endpoint: unknown): Swagger => {
   return newSwagger
 }
 
-const updateComponents = async (swagger: Swagger, typescriptFile: string): Promise<Swagger> => {
+const updateComponents = async (
+  swagger: Swagger,
+  typescriptFile: string,
+  entityName: string,
+): Promise<Swagger> => {
   const schema = await generateRequestBodyDefinition(readFile(typescriptFile))
+  const components = { schema: path(['components', 'schemas'], schema) }
+  writeFileSync(
+    `./swagger-schemas/${entityName}.json`,
+    JSON.stringify({ ...schema, components }, null, 2),
+  )
   const newSwagger = { ...swagger }
-  const existingSchema = swagger.components?.schema
-  const components = {
-    schema: { ...existingSchema, ...pathOr({}, ['components', 'schemas'], schema) },
-  }
-  Object.assign(newSwagger, { components })
   return newSwagger
 }
 
@@ -95,7 +99,7 @@ Promise.resolve()
       type: 'post',
       path: '/api/person',
       schema: {
-        $ref: '#/components/schema/Person',
+        $ref: 'http://localhost:9090/swagger-schemas/person.json#/components/schema/Person',
       },
     })
     const getEntityEndpoint = generateEndpointDefinition({
@@ -115,7 +119,7 @@ Promise.resolve()
 
     const withPost = updateEndpoint(swagger, postEntityEndpoint)
     const withGet = updateEndpoint(withPost, getEntityEndpoint)
-    const withComponents = await updateComponents(withGet, './src/app/person.ts')
+    const withComponents = await updateComponents(withGet, './src/app/person.ts', 'person')
 
     writeFileSync('./src/swagger.json', JSON.stringify(withComponents, null, 2))
   })

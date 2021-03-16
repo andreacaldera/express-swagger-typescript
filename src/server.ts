@@ -1,4 +1,5 @@
 import express, { Express } from 'express'
+import path from 'path'
 import swaggerUi from 'swagger-ui-express'
 import { createEntityRouter } from './app/router'
 import swaggerDocument from './swagger.json'
@@ -7,6 +8,8 @@ const app: Express = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.use('/swagger-schemas', express.static(path.resolve('swagger-schemas')))
 
 app.use('/api', createEntityRouter())
 
